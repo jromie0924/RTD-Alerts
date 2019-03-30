@@ -12,22 +12,26 @@ const DEBUG = false;
 
 exports.authenticate = (callback) => {
   db.getAPITokens((err, tokens) => {
-    const oauth2 = new OAuth2(
-       tokens.consumer,
-       tokens.secret,
-       'https://api.twitter.com/',
-       null,
-       'oauth2/token',
-       null
-     );
-     if (!cache.get('bearer')) {
-       oauth2.getOAuthAccessToken("", postData, (e, access_token, refresh_token, results) => {
-         cache.put('bearer', access_token, 600000, (k, v) => {
+    if (err) {
+      callback(err);
+    } else {
+      const oauth2 = new OAuth2(
+         tokens.consumer,
+         tokens.secret,
+         'https://api.twitter.com/',
+         null,
+         'oauth2/token',
+         null
+       );
+       if (!cache.get('bearer')) {
+         oauth2.getOAuthAccessToken("", postData, (e, access_token, refresh_token, results) => {
+           cache.put('bearer', access_token, 600000, (k, v) => {
+           });
+           return callback(null, access_token);
          });
-         return callback(access_token);
-       });
-     } else {
-       return callback(cache.get('bearer'));
-     }
+       } else {
+         return callback(null, cache.get('bearer'));
+       }
+    }
   });
 }
