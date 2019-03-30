@@ -1,0 +1,19 @@
+{
+  "name": "rtd-alerts",
+  "version": "1.0.0",
+  "description": "Transit delay alerts",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jackson Romie",
+  "license": "MIT",
+  "dependencies": {
+    "base-64": "^0.1.0",
+    "memory-cache": "^0.2.0",
+    "nedb": "^1.8.0",
+    "nodemailer": "^6.0.0",
+    "oauth": "^0.9.15",
+    "utf8": "^3.0.0"
+  }
+}
