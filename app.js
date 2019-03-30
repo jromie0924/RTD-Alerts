@@ -1,21 +1,16 @@
-var http = require("http");
-var url = require("url");
-// var mailer = require('nodemailer');
+const http = require("http");
 const mail = require("./emailer.js")
 const auth = require("./auth.js");
 const dbUpdater = require("./db-updater.js");
 const db = require("./db.js");
+const controller = require("./controller.js");
 
-http.createServer((req, res) => {
-  res.writeHead(200, {"contnet-type": "text/html"});
-  // res.write(req.url);
-  var q = url.parse(req.url, true).query;
-  var txt = q.year + " " + q.month;
-  res.end(txt);
-}).listen(8080);
+controller.createServer();
 
 auth.authenticate(token => {
   if (token) {
-    console.log(`bearer: ${token}`);
+    console.log("Bearer stored");
+  } else {
+    console.error("Error obtaining Twitter API bearer token.");
   }
 });
