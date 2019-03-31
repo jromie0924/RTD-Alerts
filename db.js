@@ -12,6 +12,11 @@ const keyStoreConfig = {
   autoload: true
 };
 
+const senderCredsConfig = {
+  filename: "./db/senderCreds.db",
+  autoload: true
+};
+
 exports.getAPITokens = (callback) => {
   const db = new Datastore(keyStoreConfig);
 
@@ -23,6 +28,31 @@ exports.getAPITokens = (callback) => {
       const secret = utf8.decode(base64.decode(obj.secret));
       const consumer = utf8.decode(base64.decode(obj.consumer));
       callback(null, {secret: secret, consumer: consumer});
+    }
+  });
+}
+
+exports.getEmailCreds = (callback) => {
+  const db = new Datastore(senderCredsConfig);
+
+  db.find({}, (err, docs) => {
+    if (err) {
+      callback(err);
+    } else {
+      const obj = docs[0];
+      const password = utf8.decode(base64.decode(obj.password));
+      callback(null, {email: obj.email, password: password});
+    }
+  });
+}
+
+exports.getAllUsers = (callback) => {
+  const db = new Datastore(userStoreConfig);
+  db.find({}, (err, docs) => {
+    if (err) {
+      callback(err);
+    } else {
+      callback(null, docs);
     }
   });
 }

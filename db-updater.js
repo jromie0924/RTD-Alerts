@@ -61,3 +61,35 @@ exports.addUserToken = (consumerKey, consumerKeySecret, callback) => {
     }
   });
 };
+
+exports.addSenderCreds = (email, password, callback) => {
+  const datastoreConfig = {
+    filename: "./db/senderCreds.db",
+    autoload: true
+  };
+
+  var db = new Datastore(datastoreConfig);
+  var id = "";
+
+  const matches = email.match(emailIdRegex);
+  if (matches && matches.length === 1) {
+    id = matches[0];
+
+    var doc = {
+      email: email,
+      passoword: base64.encode(utf8.encode(password)),
+      _id: id
+    };
+
+    db.insert(doc, (err, newDoc) => {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null, newDoc);
+      }
+    });
+
+  } else {
+    callback("Invalid email provided.");
+  }
+}
