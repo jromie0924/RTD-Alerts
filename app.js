@@ -9,5 +9,6 @@ auth.authenticate((err, token) => {
     console.error(`Error: ${err}`);
   } else {
     console.log("Bearer stored");
+    // console.log(`${token}`);
   }
 });

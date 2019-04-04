@@ -93,3 +93,27 @@ exports.addSenderCreds = (email, password, callback) => {
     callback("Invalid email provided.");
   }
 }
+
+exports.addTransitParameters = (screenName, count, name, callback) => {
+  const datastoreConfig = {
+    filename: "./db/transitParams.db",
+    autoload: true
+  };
+
+  var db = new Datastore(datastoreConfig);
+  var id = name;
+
+  var doc = {
+    screen_name: screenName,
+    count: count,
+    _id: name
+  };
+
+  db.insert(doc, (err, newDoc) => {
+    if (err) {
+      callback(err);
+    } else {
+      callback(null, newDoc);
+    }
+  });
+}
