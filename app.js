@@ -1,5 +1,6 @@
 const auth = require("./auth.js");
 const controller = require("./controller.js");
+const transitInfo = require("./transitInfo");
 
 controller.createServer();
 
