@@ -3,7 +3,7 @@ const controller = require("./controller.js");
 const transitInfo = require("./transitInfo");
 const emailer = require("./emailer.js");
 
-controller.createServer();
+controller.startServer();
 
 auth.authenticate((err, token) => {
   if (err) {
