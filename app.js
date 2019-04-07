@@ -1,6 +1,7 @@
 const auth = require("./auth.js");
 const controller = require("./controller.js");
 const transitInfo = require("./transitInfo");
+const emailer = require("./emailer.js");
 
 controller.createServer();
 
@@ -10,6 +11,8 @@ auth.authenticate((err, token) => {
     console.error(`Error: ${err}`);
   } else {
     console.log("Bearer stored");
-    // console.log(`${token}`);
+    transitInfo.watchTransit(err => {
+      console.error(err);
+    });
   }
 });

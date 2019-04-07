@@ -58,6 +58,22 @@ exports.createServer = () => {
           } catch(e) {
             console.error(e);
           }
+        } else if (obj.type === entityType.apiTokens) {
+          var data = obj.data;
+          if (!(data.consumer && data.secret)) {
+            responseHelper.writeResponse(res, 500);
+            res.end("Must contain a secret key as well as a consumer key.");
+          } else {
+            dbUpdater.addUserToken(data.consumer, data.secret, (err, newDoc) => {
+              if (err) {
+                responseHelper.writeResponse(res, 500);
+                res.end(JSON.parse(err));
+              } else {
+                responseHelper.writeResponse(res, 200);
+                res.end(body);
+              }
+            });
+          }
         } else {
           responseHelper.writeResponse(res, 404);
           res.end("Not found");

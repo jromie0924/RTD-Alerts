@@ -17,6 +17,11 @@ const senderCredsConfig = {
   autoload: true
 };
 
+const transitParameters = {
+  filename: "./db/transitParams.db",
+  autoload: true
+};
+
 exports.getAPITokens = (callback) => {
   const db = new Datastore(keyStoreConfig);
 
@@ -49,6 +54,17 @@ exports.getEmailCreds = (callback) => {
 exports.getAllUsers = (callback) => {
   const db = new Datastore(userStoreConfig);
   db.find({}, (err, docs) => {
+    if (err) {
+      callback(err);
+    } else {
+      callback(null, docs);
+    }
+  });
+}
+
+exports.getQueryParams = (id, callback) => {
+  const db = new Datastore(transitParameters);
+  db.find({_id: id}, (err, docs) => {
     if (err) {
       callback(err);
     } else {
