@@ -101,7 +101,6 @@ exports.addTransitParameters = (screenName, count, name, callback) => {
   };
 
   var db = new Datastore(datastoreConfig);
-  var id = name;
 
   var doc = {
     screen_name: screenName,
