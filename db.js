@@ -62,9 +62,20 @@ exports.getAllUsers = (callback) => {
   });
 }
 
-exports.getQueryParams = (id, callback) => {
+exports.getUserByTransit = (transit, callback) => {
+  const db = new Datastore(userStoreConfig);
+  db.find({'transit': transit}, (err, docs) => {
+    if (err) {
+      callback(err);
+    } else {
+      callback(null, docs);
+    }
+  });
+}
+
+exports.getQueryParams = (ids, callback) => {
   const db = new Datastore(transitParameters);
-  db.find({_id: id}, (err, docs) => {
+  db.find({_id: {$in: ids}}, (err, docs) => {
     if (err) {
       callback(err);
     } else {

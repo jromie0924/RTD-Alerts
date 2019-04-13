@@ -1,4 +1,3 @@
-const http = require("http");
 const express = require("express");
 const responseHelper = require("./responseHelper.js");
 const dbUpdater = require("./db-updater.js");

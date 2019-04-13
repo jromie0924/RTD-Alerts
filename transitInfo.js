@@ -1,60 +1,72 @@
-const https = require('https');
-const auth = require('./auth.js');
-const db = require('./db.js');
+import { getAllUsers, getQueryParams } from './db.js';
+import { Observable, forkJoin } from 'rxjs';
+import { get } from 'request';
+import { first } from 'rxjs/operators';
 
 const twitterUrl = 'https://api.twitter.com';
 
-exports.watchTransit = (callback) => {
-  db.getAllUsers((err, users) => {
+export function watchTransit(bearer, callback) {
+  update(bearer, (err, data) => {
+    if (err) {
+      callback(err);
+    } else {
+      callback(null, data);
+    }
+  })
+}
+
+/**
+ * 
+ * @param {function} callback 
+ */
+var update = (bearer, callback) => {
+  getAllUsers((err, users) => {
     if (err) {
       callback(JSON.parse(err));
     } else {
-      users.forEach(user => {
-        const transit = user.transit;
-        db.getQueryParams(transit, (err, data) => {
-          if (err) {
-            callback(JSON.parse(err));
-          } else {
-            const params = data[0];
+      const transitIds = [...new Set(users.map(user => user.transit))];
+      console.log(transitIds);
+
+      getQueryParams(transitIds, (err, data) => {
+        if (err) {
+          callback(JSON.parse(err));
+        } else {
+          const observablesToForkJoin = [];
+          data.forEach(params => {
             const screenName = params.screen_name;
             const count = params.count;
-            getData(screenName, count, (err, res) => {
-              if (err) {
-                console.error(err);
-              } else {
-                console.log(JSON.parse(res));
-              }
-            })
-          }
-        });
+            observablesToForkJoin.push(getData(bearer, screenName, count));
+          });
+          forkJoin(observablesToForkJoin).pipe(first()).subscribe(dataArray => {
+            callback(null, dataArray);
+          });
+        }
       });
     }
   });
 }
 
-var getData = (screenName, count, callback) => {
-  auth.authenticate((err, token) => {
-    if (err) {
-      callback(JSON.parse(err));
-    } else {
-      const options = {
-        path: `/1.1/statuses/user_timeline.json?screen_name=${screenName}&count=${count}&exclude_replies=true&tweet_mode=extended`,
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      };
-      https.get(twitterUrl, options, res => {
-        if (res.statusCode === 200) {
-          res.on('data', data => {
-            const posts = JSON.parse(data);
-            posts.forEach(post => {
-              const text = post.full_text;
-              // TODO: Look for keywords in text
-            });
-          });
-        }
-      });
+/**
+ * 
+ * @param {string} bearer 
+ * @param {string} screenName 
+ * @param {number} count 
+ */
+var getData = (bearer, screenName, count) => {
+  const path = `/1.1/statuses/user_timeline.json?screen_name=${screenName}&count=${count}&exclude_replies=true&tweet_mode=extended`;
+  const headers = {
+    'auth': {
+      'bearer': bearer
     }
+  };
+  return Observable.create(observer => {
+    get(twitterUrl + path, headers, (err, res, body) => {
+      if (err) {
+        observer.error(err);
+      } else {
+        observer.next(JSON.parse(body));
+      }
+      observer.complete();
+    });
   });
 }
