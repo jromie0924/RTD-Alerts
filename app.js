@@ -8,32 +8,8 @@ const errorTypes = errors.errorTypes();
 
 controller.startServer();
 
-auth.authenticate((err, token) => {
-  if (err) {
-    console.error("Error obtaining Twitter API bearer token.");
-    console.error(`Error: ${err}`);
-  } else {
-    console.log("Bearer stored");
-    transitInfo.watchTransit(token, (err, data) => {
-      if (err) {
-        console.err(JSON.parse(err));
-      } else {
-        data.forEach(dataArray => {
-          if (dataArray.errors) {
-            const errors = dataArray.errors.filter(obj => obj.code === errorTypes.bearer);
-            if (errors.length) {
-              // TODO: logic to reacquire a bearer token
-              console.error("bad token");
-            } else {
-              console.error(errors)
-            }
-          } else {
-            console.log(dataArray);
-          }
-        });
-      }
-    });
-  }
+transitInfo.watchTransit(err => {
+  console.error(`FATAL: ${err}`);
 });
 
 /**
