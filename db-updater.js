@@ -1,10 +1,10 @@
-const Datastore = require("nedb");
-const base64 = require("base-64");
-const utf8 = require("utf8");
+import Datastore from "nedb";
+import { encode } from "base-64";
+import { encode as _encode } from "utf8";
 
 const emailIdRegex = /^.*(?=(\@))/g;
 
-exports.addUser = (name, email, transit, callback) => {
+export function addUser(name, email, transit, callback) {
   const datastoreConfig = {
     filename: "./db/users.db",
     autoload: true
@@ -32,9 +32,9 @@ exports.addUser = (name, email, transit, callback) => {
       }
     });
   } else callback("Invalid email provided.");
-};
+}
 
-exports.addUserToken = (consumerKey, consumerKeySecret, callback) => {
+export function addUserToken(consumerKey, consumerKeySecret, callback) {
   const datastoreConfig = {
     filename: "./db/keys.db",
     autoload: true
@@ -42,10 +42,10 @@ exports.addUserToken = (consumerKey, consumerKeySecret, callback) => {
 
   var db = new Datastore(datastoreConfig);
 
-  const consumerEncoded = base64.encode(utf8.encode(consumerKey));
-  const consumerSecretEncoded = base64.encode(utf8.encode(consumerKeySecret));
+  const consumerEncoded = encode(_encode(consumerKey));
+  const consumerSecretEncoded = encode(_encode(consumerKeySecret));
 
-  const id = base64.encode(utf8.encode(`${consumerKey}:${consumerKeySecret}`));
+  const id = encode(_encode(`${consumerKey}:${consumerKeySecret}`));
 
   const doc = {
     consumer: consumerEncoded,
@@ -60,9 +60,9 @@ exports.addUserToken = (consumerKey, consumerKeySecret, callback) => {
       callback(null, newDoc);
     }
   });
-};
+}
 
-exports.addSenderCreds = (email, password, callback) => {
+export function addSenderCreds(email, password, callback) {
   const datastoreConfig = {
     filename: "./db/senderCreds.db",
     autoload: true
@@ -77,7 +77,7 @@ exports.addSenderCreds = (email, password, callback) => {
 
     var doc = {
       email: email,
-      passoword: base64.encode(utf8.encode(password)),
+      passoword: encode(_encode(password)),
       _id: id
     };
 
@@ -94,7 +94,7 @@ exports.addSenderCreds = (email, password, callback) => {
   }
 }
 
-exports.addTransitParameters = (screenName, count, name, callback) => {
+export function addTransitParameters(screenName, count, name, callback) {
   const datastoreConfig = {
     filename: "./db/transitParams.db",
     autoload: true

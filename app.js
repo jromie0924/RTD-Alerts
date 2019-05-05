@@ -1,14 +1,13 @@
-const auth = require("./auth.js");
-const controller = require("./controller.js");
-const transitInfo = require("./transitInfo");
+import { startServer } from "./controller.js";
+import { watchTransit } from "./transitInfo";
 // const http = require("http");
-const errors = require("./enumerations/error-types.js");
+import { errorTypes as _errorTypes } from "./enumerations/error-types.js";
 
-const errorTypes = errors.errorTypes();
+// const errorTypes = _errorTypes();
 
-controller.startServer();
+startServer();
 
-transitInfo.watchTransit(err => {
+watchTransit(err => {
   console.error(`FATAL: ${err}`);
 });
 

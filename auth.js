@@ -1,17 +1,15 @@
-const OAuth = require("oauth");
-const cache = require("memory-cache");
-const db = require("./db.js");
+import { OAuth2 as _OAuth2 } from "oauth";
+import { get, put } from "memory-cache";
+import { getAPITokens } from "./db.js";
 
-var OAuth2 = OAuth.OAuth2;
-
-const DEBUG = false;
+var OAuth2 = _OAuth2;
 
  const postData = {
    "grant_type": "client_credentials"
  };
 
-exports.authenticate = (callback) => {
-  db.getAPITokens((err, tokens) => {
+export function authenticate(callback) {
+  getAPITokens((err, tokens) => {
     if (err) {
       callback(err);
     } else {
@@ -23,14 +21,14 @@ exports.authenticate = (callback) => {
          'oauth2/token',
          null
        );
-       if (!cache.get('bearer')) {
+       if (!get('bearer')) {
          oauth2.getOAuthAccessToken("", postData, (e, access_token, refresh_token, results) => {
-           cache.put('bearer', access_token, 600000, (k, v) => {
+           put('bearer', access_token, 600000, (k, v) => {
            });
            return callback(null, access_token);
          });
        } else {
-         return callback(null, cache.get('bearer'));
+         return callback(null, get('bearer'));
        }
     }
   });
