@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node_modules/.bin/nodemon app.js --exec babel-node --"
+    "start": "node_modules/.bin/nodemon app.js --exec babel-node --",
+    "debug": "node_modules/.bin/nodemon app.js --inspect-brk --exec babel-node --"
   },
   "author": "Jackson Romie",
   "license": "MIT",
@@ -23,6 +24,9 @@
     "utf8": "^3.0.0"
   },
   "devDependencies": {
-    "nodemon": "^1.18.10"
+    "braces": "^3.0.2",
+    "lodash": "^4.17.15",
+    "nodemon": "^1.18.10",
+    "source-map-support": "^0.5.13"
   }
 }
