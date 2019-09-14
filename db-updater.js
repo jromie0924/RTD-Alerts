@@ -42,10 +42,17 @@ export function addUserToken(consumerKey, consumerKeySecret, callback) {
 
   var db = new Datastore(datastoreConfig);
 
+<<<<<<< HEAD
   const consumerEncoded = base64Encode(utf8Encode(consumerKey));
   const consumerSecretEncoded = base64Encode(utf8Encode(consumerKeySecret));
 
   const id = base64Encode(utf8Encode(`${consumerKey}:${consumerKeySecret}`));
+=======
+  const consumerEncoded = encode(_encode(consumerKey));
+  const consumerSecretEncoded = encode(_encode(consumerKeySecret));
+
+  const id = encode(_encode(`${consumerKey}:${consumerKeySecret}`));
+>>>>>>> 2cc4902f83d9b82c1a5c2935829d04e01b3659c2
 
   const doc = {
     consumer: consumerEncoded,
@@ -77,7 +84,11 @@ export function addSenderCreds(email, password, callback) {
 
     var doc = {
       email: email,
+<<<<<<< HEAD
       passoword: base64Encode(utf8Encode(password)),
+=======
+      passoword: encode(_encode(password)),
+>>>>>>> 2cc4902f83d9b82c1a5c2935829d04e01b3659c2
       _id: id
     };
 

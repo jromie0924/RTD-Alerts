@@ -6,10 +6,10 @@ import { authenticate } from './auth.js';
 import { errorTypes } from './enumerations/error-types';
 
 // 1800000 ms = 30 minutes
-const STANDARD_INTERVAL = 1800000;
+const STANDARD_INTERVAL = 10000;
 
 // 30000 ms = 30 seconds
-const FAST_INTERVAL = 30000;
+const FAST_INTERVAL = 5000;
 
 let interval = STANDARD_INTERVAL;
 

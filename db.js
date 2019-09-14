@@ -1,6 +1,6 @@
-const Datastore = require("nedb");
-const base64 = require("base-64");
-const utf8 = require("utf8");
+import Datastore from "nedb";
+import { decode } from "base-64";
+import { decode as _decode } from "utf8";
 
 const userStoreConfig = {
   filename: "./db/users.db",
@@ -22,7 +22,7 @@ const transitParameters = {
   autoload: true
 };
 
-exports.getAPITokens = (callback) => {
+export function getAPITokens(callback) {
   const db = new Datastore(keyStoreConfig);
 
   db.find({}, (err, docs) => {
@@ -30,14 +30,14 @@ exports.getAPITokens = (callback) => {
       callback(err);
     } else {
       const obj = docs[0];
-      const secret = utf8.decode(base64.decode(obj.secret));
-      const consumer = utf8.decode(base64.decode(obj.consumer));
+      const secret = _decode(decode(obj.secret));
+      const consumer = _decode(decode(obj.consumer));
       callback(null, {secret: secret, consumer: consumer});
     }
   });
 }
 
-exports.getEmailCreds = (callback) => {
+export function getEmailCreds(callback) {
   const db = new Datastore(senderCredsConfig);
 
   db.find({}, (err, docs) => {
@@ -45,13 +45,13 @@ exports.getEmailCreds = (callback) => {
       callback(err);
     } else {
       const obj = docs[0];
-      const password = utf8.decode(base64.decode(obj.password));
+      const password = _decode(decode(obj.password));
       callback(null, {email: obj.email, password: password});
     }
   });
 }
 
-exports.getAllUsers = (callback) => {
+export function getAllUsers(callback) {
   const db = new Datastore(userStoreConfig);
   db.find({}, (err, docs) => {
     if (err) {
@@ -62,7 +62,7 @@ exports.getAllUsers = (callback) => {
   });
 }
 
-exports.getUserByTransit = (transit, callback) => {
+export function getUserByTransit(transit, callback) {
   const db = new Datastore(userStoreConfig);
   db.find({'transit': transit}, (err, docs) => {
     if (err) {
@@ -73,7 +73,7 @@ exports.getUserByTransit = (transit, callback) => {
   });
 }
 
-exports.getQueryParams = (ids, callback) => {
+export function getQueryParams(ids, callback) {
   const db = new Datastore(transitParameters);
   db.find({_id: {$in: ids}}, (err, docs) => {
     if (err) {

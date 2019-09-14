@@ -1,8 +1,7 @@
-const auth = require("./auth.js");
-const controller = require("./controller.js");
-const transitInfo = require("./transitInfo");
+import { startServer } from "./controller.js";
+import { watchTransit } from "./transitInfo";
 // const http = require("http");
-const errors = require("./enumerations/error-types.js");
+import { errorTypes as _errorTypes } from "./enumerations/error-types.js";
 
 // TODO: see readme here for converting to ES6 import
 // https://github.com/evanw/node-source-map-support
@@ -10,7 +9,7 @@ require('source-map-support').install();
 
 const errorTypes = errors.errorTypes();
 
-controller.startServer();
+startServer();
 
 debugger;
 transitInfo.watchTransit(err => {

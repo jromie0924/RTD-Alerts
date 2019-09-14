@@ -1,19 +1,19 @@
-const mailer = require("nodemailer");
-const db = require("./db.js");
+import { createTransport } from "nodemailer";
+import { getEmailCreds, getAllUsers } from "./db.js";
 
-exports.email = (message, rtdAlert = null, callback) => {
+export function email(message, rtdAlert = null, callback) {
   var retval;
 
   var senderEmail = "";
   var senderPassowrd = "";
 
-  db.getEmailCreds((err, doc) => {
+  getEmailCreds((err, doc) => {
     if (err) {
       callback(err);
     } else {
       senderEmail = doc.email;
       senderPassword = doc.password;
-      const transporter = mailer.createTransport({
+      const transporter = createTransport({
         service: 'gmail',
         auth: {
           user: senderEmail,
@@ -26,7 +26,7 @@ exports.email = (message, rtdAlert = null, callback) => {
         htmlContent += `<br><p>Tweet:<p><p>${rtdAlert}</p>`;
       }
 
-      db.getAllUsers((err, docs) => {
+      getAllUsers((err, docs) => {
         if (err) {
           callback(err);
         } else if (docs && docs.length > 0) {
@@ -52,4 +52,4 @@ exports.email = (message, rtdAlert = null, callback) => {
       });
     }
   });
-};
+}
