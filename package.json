@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "braces": "^3.0.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.13",
     "nodemon": "^1.18.10",
     "source-map-support": "^0.5.13"
   }
