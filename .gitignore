@@ -30,3 +30,6 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+/.blackbox/pubring.gpg~
+/.blackbox/pubring.kbx~
+/.blackbox/secring.gpg
