@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RTD_Alerts.Context;
 using RTD_Alerts.Services;
 
 namespace RTD_Alerts
@@ -25,8 +27,12 @@ namespace RTD_Alerts
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<ISystemDateTime, SystemDateTime>();
+            services.AddSingleton<ITwitterAuthenticationService, TwitterAuthenticationService>();
+
             services.AddHealthChecks();
             services.AddControllersWithViews();
+            services.AddDbContext<RTDAlertsContext>(options => 
+                options.UseNpgsql(Configuration.GetConnectionString("RTDAlertsContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
