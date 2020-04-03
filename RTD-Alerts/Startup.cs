@@ -24,6 +24,7 @@ namespace RTD_Alerts
             services.AddSingleton<ISystemDateTime, SystemDateTime>();
             services.AddSingleton<ITwitterAuthenticationService, TwitterAuthenticationService>();
 
+            services.AddHttpClient();
             services.AddHealthChecks();
             services.AddControllersWithViews();
             services.AddDbContext<RTDAlertsContext>(options => 
